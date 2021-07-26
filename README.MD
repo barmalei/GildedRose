@@ -3,7 +3,7 @@
 https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
 
 The repo contains number of refactored Gilded Rose implementations listed below:
-  * **ReadableGlidedRose**  The class improves readability of code to help catch the ideas of the algorithm faster
+  * **ReadableGlidedRose**  The class improves readability of code to help catch the ideas of the algorithm faster than original "GlidedRose" code.
   * **BriefGlidedRose**  The purpose of the given implementation is minimalist/brief code.
   * **RedesignedfGlidedRose** This is a simple customizable implementation. The idea is making extending Glided Rose assortment with new Item types more easy and flexible.
 
@@ -15,7 +15,7 @@ Test cases can be found in **GlidedRoseTest** class. Pay attention the following
 
 # RedesignedfGlidedRose implementation
 
-The idea is designing simple "ItemUpdateRule" interface that defines two things:
+The idea is introducing simple "ItemUpdateRule" interface that defines two things:
   * Matching items that can be updated with the given rule
   * Updating the matched item the way the rule implements
 
@@ -26,7 +26,15 @@ The idea is designing simple "ItemUpdateRule" interface that defines two things:
     }
 ```
 
-THe interface has number of implementations related to each type of Glade Rose item we have to handle. To illustrate the idea of the design imagine we need to support new "Conjured" items that degrade in quality twice as fast as normal items. First of all, let's implement the new item update rule:
+The interface has number of implementations related to each type of Glade Rose item we have to handle:
+  * **DefaultItemUpdateRule**
+  * **BrieUpdateRule**
+  * **BackstageUpdateRule**
+  * **SufulasUpdateRule**
+  * **ConjuredUpdateRule**
+
+
+To illustrate the idea imagine we need to support new "Conjured" item type that degrades in quality twice as fast as normal items. First of all, let's implement the new item update rule:
 
 ```java
     public class ConjuredItemUpdateRule implements ItemUpdateRule {
@@ -50,15 +58,15 @@ THe interface has number of implementations related to each type of Glade Rose i
     }
 ```
 
-Then use the rule in Glided Rose implementation as follow:
+Then let's use the rule in Glided Rose implementation as follow:
 
 ```java
  RedesignedGildedRose gr = new RedesignedGildedRose(new Item[] { ... });
- gr.addUpdateRule(new ConjuredItemUpdateRule());
+ gr.addUpdateRule(new ConjuredItemUpdateRule()); // add new rule
  gr.updateQuality();
 ```
 
-Pay attention the example implementation is supposed to be used as an demonstration. The real "Conjured" items rule code is even simple (since it is based on default update rule implementation):
+Pay attention the example implementation is supposed to be used for demo purposes. The real "Conjured" items rule code is even more simple (it is based on default item update rule implementation):
 ```java
     public class ConjuredUpdateRule extends DefaultItemUpdateRule {
         public ConjuredUpdateRule() {
