@@ -1,5 +1,7 @@
 # Description
 
+https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
+
 The repo contains number of refactored Gilded Rose implementations listed below:
   * **ReadableGlidedRose**  The class improves readability of code to help catch the ideas of the algorithm faster
   * **BriefGlidedRose**  The purpose of the given implementation is minimalist/brief code.
