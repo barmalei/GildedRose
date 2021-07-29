@@ -3,16 +3,19 @@
 
 Original challenge is described https://github.com/emilybache/GildedRose-Refactoring-Kata/blob/main/GildedRoseRequirements.txt
 
-First let's re-formulate the challenge following more structured way. There are different types of items whose quality are updated on daily basis depending on product type and product expiration .
-  * *Common Case*
+First let's re-formulate the challenge following more structured way. There are different types of items whose quality are updated on daily basis depending on product type and product expiration.
+  * *Common Cases*
     * Product is not expired then quality degrades by 1
     * Expired product degrades twice faster
 
   * *Particular Cases*
-    * "Aged Brie" increase its quality the older it gets
-    * "Backstage" increase its quality the older it gets
+    * "Aged Brie" increases its quality the older it gets
+    * "Backstage" increases its quality the older it gets as follow:
+        * sellIn > 10 then +1
+        * 5 < sellIn <= 10 then +2
+        * 0 < sellIn <= 5 then  +3
     * "Sulfuras" never be sold, quality is constant value
-    * "Conjured" (NEW case) degrades in Quality twice as fast as normal
+    * "Conjured" (NEW case) degrades in quality twice as fast as normal
 
   * *Boundary conditions*
     * Item quality has to be >= 0 and <= 50
@@ -25,11 +28,6 @@ The repo contains number of refactored Gilded Rose implementations listed below:
   * **BriefGlidedRose**  The purpose of the given implementation is minimalist/brief code.
   * **RedesignedfGlidedRose** This is a simple customizable implementation. The idea is making extending Glided Rose assortment with new Item types more easy and flexible.
 
-Test cases can be found in **GlidedRoseTest** class. Pay attention the following:
-  * The idea is using the original "GlidedRose" output as "source of truth" to compare its output to custom Glided Rose implementations mentioned above.
-  * There is number of predefined test items declared in the test case code
-  * There is number of items that are generated randomly to improve test coverage and simplify writing test cases
-
 ## ReadableGlidedRose
 
 The idea is re-organizing code to make it more clear and understandable. "Make the code clear" means the code should better expose problem of statement to help a developer faster identifying the problem the code tries to solve. Logically the code has been re-organized:
@@ -40,12 +38,12 @@ The idea is re-organizing code to make it more clear and understandable. "Make t
 
 ## BriefGlidedRose
 
-The purpose is making compact implementation of the given assessment task. Code could look a bit weird, less clear, but technically it works. The excise can be useful to see how surplus and redundant the initial code is.
+The purpose is making compact implementation of the given assessment task. Code could look a bit weird, less clear, but technically it works. The exercise can be useful to see how surplus and redundant the initial code is.
 
 
 ## RedesignedfGlidedRose implementation
 
-The purpose of the solution is making the final solution supportable, extendable and flexible. The key idea is introducing simple "ItemUpdateRule" interface that defines two things:
+The purpose of the code is making the final solution supportable, extendable and flexible. The key idea is introducing simple "ItemUpdateRule" interface that defines two things:
   * Matching items that can be updated with the given rule
   * Updating the matched item the way the rule implements
 
@@ -108,19 +106,23 @@ Pay attention the example implementation is supposed to be used for demo purpose
 
 ## Test cases
 
-...
+Test cases can be found in **GlidedRoseTest** class. Pay attention the following:
+  * The idea is using the original "GlidedRose" output as "source of truth" to compare its output to custom Glided Rose implementations mentioned above.
+  * There is number of predefined test items declared in the test case code
+  * There is number of items that are generated randomly to improve test coverage and simplify writing test cases
+
 
 # Simplification, improvements
 
- * RedesignedfGlidedRose: all designed classes for the sake of simplicity and faster reviewing are static inner classes.
- * Test cases:
-    * Split single test case to multiple following the common best practice (one test case class per testing class)
-    * Move common, re-usable part test case parts (random Item generator, Item marcher, etc ) into base test case class and inherit it whenever we need it
- * There are number of places where we store references to objects (Item, Item[]) that is not safe because we have a deal with shared copies of object. It is better ti fix with cloning the instances.
- * The way how we match items is very weak (case sensitive, free text match). It is better to introduce sort of Item type property and description. Mathing should be done by type (type can be enum). One more way is using pattern matching (regexp)
+ * RedesignedfGlidedRose: all designed classes for the sake of simplicity and faster reviewing are static inner classes. That should not happen in real development. In most cases classes and interfaces should be placed in individual files.
+ * Test cases have required re-factoring to:
+    * split single test case to multiple following the common best practice (one test case class per one class we are testing)
+    * move common, re-usable part (random Item generator, Item marcher, etc) into a base test case class and inherit it whenever it is neede
+ * There are number of places where we store references to objects (Item, Item[]) unsafely getting shared copies of the same instance in different parts. It is better to fix it with cloning/copying the instances.
+ * The way how we match items is very weak (case sensitive, free text match). It is better to introduce sort of Item type property and description property. Mathing should be done by type (type can be Enum). One more way to improve it is using pattern matching (regexp).
  * Better and more graceful design:
-    * Use standard functional interface as the key class to define Item update rules. Then we can pass it as lambda and we don't need dedicated class abstractions.
-    * Matching should be done on the level of main class:
+    * Use standard functional interface as the key class that defines an Item update rules. Then we can pass it as lambda and we don't need to have a special abstract class or interface.
+    * Matching can be done on the level of main class:
 ```java
     RedesignedGildedRose gr = new RedesignedGildedRose(new Item[] { ... });
     gr.addUpdateRule("<math string>" | item_type>, item -> {
@@ -130,7 +132,7 @@ Pay attention the example implementation is supposed to be used for demo purpose
 
 ```
 
-    * Item itself should be implemented better manner (validation, equal, hash)
+  * Item itself should be implemented better manner (argument validation, equal, hash, etc)
 
 
 
